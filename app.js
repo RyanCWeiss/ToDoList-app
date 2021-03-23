@@ -18,11 +18,10 @@ const itemSchema = {
 }
 const Item =  mongoose.model("Item", itemSchema);
 
-const item1 = new Item({name: "hw"});
-const item2 = new Item({name: "cook"});
-const item3 = new Item( {name: "clean"});
+const item1 = new Item({name: "<-- remove Item"});
+const item2 = new Item( {name: "Add Item v"});
 
-const defaultItems = [item1, item2, item3];
+const defaultItems = [item1, item2];
 
 const listSchema = {
     name: String,
@@ -31,7 +30,10 @@ const listSchema = {
 
 const List = mongoose.model("List", listSchema);
 
+
 app.get("/", function(req, res) {
+    const collections = Object.keys(mongoose.connection.collections);
+    console.log(collections);
     const items = []
     Item.find({}, function(err, foundItems){
 
@@ -51,11 +53,10 @@ app.get("/", function(req, res) {
     });
 });
 
-app.post("/", function(req, res) {
 
+app.post("/", function(req, res) {
     const itemName = req.body.newItem;
     const listName = req.body.list;
-
     const item = new Item({name: itemName});
 
     if (listName === "Today"){
@@ -64,11 +65,13 @@ app.post("/", function(req, res) {
     } else {
         List.findOne({name: listName}, function(err, foundList){
             foundList.items.push(item);
-            foundList.save();
-            res.redirect("/" + listName);
+            foundList.save(function(err, result){
+                res.redirect("/" + listName);
+            });
         });
     }
 });
+
 
 app.post("/delete", function(req, res) {
     const checkedItemId = req.body.checkbox;
@@ -88,16 +91,8 @@ app.post("/delete", function(req, res) {
             }
         });
     }
-
-
 });
 
-app.get("/work", function(req,res){
-    res.render("list", {
-        listTitle: "Work List",
-        newListItems: workItems
-    });
-});
 
 app.get("/:customListName", function(req,res){
     const customListName = _.capitalize(req.params.customListName);
@@ -106,26 +101,20 @@ app.get("/:customListName", function(req,res){
         if (!err){
             if (!foundList){
                 console.log("Doesnt Exist");
-
                 const list = new List({
-                    name: customListName,
-                    items: defaultItems
+                name: customListName,
+                items: defaultItems
                 });
-                list.save();
-                res.redirect("/" + customListName);
+                list.save(function(err, result){
+                    res.redirect("/" + customListName);
+                });
             } else {
                 console.log("Exists!");
                 res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
             }
         }
     });
-
-
 });
-
-app.get("/about", function(req,res){
-    res.render("about");
-})
 
 
 app.listen(3000, function() {
