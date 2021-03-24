@@ -1,5 +1,20 @@
 <%- include("header"); %>
 
+
+
+    <!-- Change to a side nav bar -->
+    <nav>
+        <% lists.forEach(function(listName){ %>
+             <!-- redirect things instead of href anchor
+            <a href="__dirname/"+ "<%=listName%>" > <%=listName%> </a>
+             -->
+        <% }) %>
+    </nav>
+    <!-- Below is complete    -->
+
+
+
+
     <div class="box" id="heading">
         <h1><%= listTitle %></h1>
     </div>

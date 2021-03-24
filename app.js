@@ -31,9 +31,18 @@ const listSchema = {
 const List = mongoose.model("List", listSchema);
 
 
+
 app.get("/", function(req, res) {
-    const collections = Object.keys(mongoose.connection.collections);
-    console.log(collections);
+
+    const listNames = [];
+    List.find({}, function(err, foundLists){
+        if (foundLists.length){
+            for (let i = 0; i < foundLists.length; i++){
+                listNames.push(foundLists[i].name);
+            }
+            console.log("names:" + listNames);
+        }
+    });
     const items = []
     Item.find({}, function(err, foundItems){
 
@@ -47,7 +56,7 @@ app.get("/", function(req, res) {
             });
             res.redirect("/");
         } else {
-            res.render("list", {listTitle: "Today", newListItems: foundItems});
+            res.render("list", {listTitle: "Today", newListItems: foundItems, lists: listNames});
         }
 
     });
@@ -95,6 +104,17 @@ app.post("/delete", function(req, res) {
 
 
 app.get("/:customListName", function(req,res){
+
+    const listNames = [];
+    List.find({}, function(err, foundLists){
+        if (foundLists.length){
+            for (let i = 0; i < foundLists.length; i++){
+                listNames.push(foundLists[i].name);
+            }
+            console.log("names:" + listNames);
+        }
+    });
+
     const customListName = _.capitalize(req.params.customListName);
 
     List.findOne({name: customListName}, function(err, foundList){
@@ -110,7 +130,7 @@ app.get("/:customListName", function(req,res){
                 });
             } else {
                 console.log("Exists!");
-                res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+                res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
             }
         }
     });
