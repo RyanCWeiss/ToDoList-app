@@ -116,24 +116,25 @@ app.get("/:customListName", function(req,res){
     });
 
     const customListName = _.capitalize(req.params.customListName);
-
-    List.findOne({name: customListName}, function(err, foundList){
-        if (!err){
-            if (!foundList){
-                console.log("Doesnt Exist");
-                const list = new List({
-                name: customListName,
-                items: defaultItems
-                });
-                list.save(function(err, result){
-                    res.redirect("/" + customListName);
-                });
-            } else {
-                console.log("Exists!");
-                res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
+    if (!(req.params.customListName === "favicon.ico")) {
+        List.findOne({name: customListName}, function(err, foundList){
+            if (!err){
+                if (!foundList){
+                    console.log("Doesnt Exist");
+                    const list = new List({
+                    name: customListName,
+                    items: defaultItems
+                    });
+                    list.save(function(err, result){
+                        res.redirect("/" + customListName);
+                    });
+                } else {
+                    console.log("Exists!");
+                    res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
+                }
             }
-        }
-    });
+        });
+    }
 });
 
 
