@@ -1,40 +1,45 @@
 <%- include("header"); %>
 
 
+<div>
+    <nav class="vertical-nav">
+        <form class="" name="listForm" action="/gotolist" method="post">
+            <input id="searchBar" class="search-bar"type="text" name="searchBar" value="" placeholder="List">
+            <button class="search-btn"type="submit">Go</button>
+        </form>
 
-    <!-- Change to a side nav bar -->
-    <nav>
-        <% lists.forEach(function(listName){ %>
-             <!-- redirect things instead of href anchor
-            <a href="__dirname/"+ "<%=listName%>" > <%=listName%> </a>
-             -->
-        <% }) %>
+        <hr>
+
+        <div class=nav-links>
+            <a class="nav-link" href="/">Today</a><br>
+            <% lists.forEach(function(listName){ %>
+            <a class="nav-link" href="/<%=listName%>"> <%=listName%> </a><br>
+            <% }) %>
+        </div>
     </nav>
-    <!-- Below is complete    -->
-
-
-
-
     <div class="box" id="heading">
         <h1><%= listTitle %></h1>
     </div>
 
     <div class="box">
-
+        <div class="list-items">
             <% newListItems.forEach(function(item){ %>
                 <form class="" action="/delete" method="post">
                     <div class="item">
                         <input name="checkbox" value="<%= item._id%>" type="checkbox" onChange="this.form.submit()">
-                        <p> <%= item.name %> </p>
+                        <p class='item-name'> <%= item.name %> </p>
                     </div>
                     <input type="hidden" name="listName" value="<%= listTitle %>">
                 </form>
             <% }) %>
 
-        <form class="item" action="/" method="post">
-            <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-            <button type="submit" name="list" value=<%= listTitle %>>+</button>
+        </div>
+
+        <form class="item item-form" action="/" method="post">
+            <input class="item-input" type="text" name="newItem" placeholder="New Item" autocomplete="off">
+            <button class="item-btn" type="submit" name="list" value=<%= listTitle %>>+</button>
         </form>
+
 
     </div>
 <%- include("footer"); %>

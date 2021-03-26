@@ -40,7 +40,6 @@ app.get("/", function(req, res) {
             for (let i = 0; i < foundLists.length; i++){
                 listNames.push(foundLists[i].name);
             }
-            console.log("names:" + listNames);
         }
     });
     const items = []
@@ -104,23 +103,24 @@ app.post("/delete", function(req, res) {
 
 
 app.get("/:customListName", function(req,res){
-
+    const customListName = _.capitalize(req.params.customListName);
+    // console.log("list: " + customListName);
     const listNames = [];
     List.find({}, function(err, foundLists){
         if (foundLists.length){
             for (let i = 0; i < foundLists.length; i++){
                 listNames.push(foundLists[i].name);
             }
-            console.log("names:" + listNames);
+            // console.log("names:" + listNames);
         }
     });
 
-    const customListName = _.capitalize(req.params.customListName);
+
+
     if (!(req.params.customListName === "favicon.ico")) {
         List.findOne({name: customListName}, function(err, foundList){
             if (!err){
                 if (!foundList){
-                    console.log("Doesnt Exist");
                     const list = new List({
                     name: customListName,
                     items: defaultItems
@@ -129,7 +129,6 @@ app.get("/:customListName", function(req,res){
                         res.redirect("/" + customListName);
                     });
                 } else {
-                    console.log("Exists!");
                     res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
                 }
             }
@@ -137,6 +136,18 @@ app.get("/:customListName", function(req,res){
     }
 });
 
+
+app.post("/gotolist", function(req, res) {
+
+
+    const listName = req.body.searchBar;
+    if (listName){
+        console.log("aaaaa");
+    }
+    res.redirect("/"+listName);
+
+    console.log("name: " + listName);
+});
 
 app.listen(3000, function() {
     console.log("server running on port 3000");
