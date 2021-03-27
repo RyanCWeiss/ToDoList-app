@@ -42,7 +42,6 @@ app.get("/", function(req, res) {
         completedTask(function(){
             const items = []
             Item.find({}, function(err, foundItems){
-                console.log("completed task: after / 48" + listNames);
                 if (foundItems.length === 0){
                     Item.insertMany(defaultItems, function(err){
                         if (err){
@@ -121,7 +120,6 @@ app.get("/:customListName", function(req,res){
         completedTask(function(){
             if (!(req.params.customListName === "favicon.ico")) {
                 List.findOne({name: customListName}, function(err, foundList){
-                    console.log("completed task: after /custom 128 " + listNames);
                     if (!err){
                         if (!foundList){
                             const list = new List({
@@ -150,9 +148,6 @@ app.post("/gotolist", function(req, res) {
     } else{
         res.redirect("/"+listName);
     }
-
-
-    console.log("name of list being created INPAGE: " + listName);
 });
 
 

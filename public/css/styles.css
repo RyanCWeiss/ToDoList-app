@@ -1,7 +1,7 @@
 
 html {
-  background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  background-color: #355c7d;
+  background-image: -webkit-linear-gradient(65deg, #f67280 50%, #355c7d 50%);
   min-height: 1000px;
   font-family: 'helvetica neue';
   margin: 0;
@@ -18,8 +18,8 @@ body{
     position: absolute;
     float: left;
     box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin-top: 109px;
 }
 
@@ -31,28 +31,29 @@ body{
     background: transparent;
     font-size: 20px;
     font-weight: 200;
-    width: 80%;
+    width: 75%;
 }
 .search-bar:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #A683E3;
+  box-shadow: inset 0 -3px 0 0 #f67280;
 }
 
 .search-btn{
+    text-align: center;
     margin-right: 3px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
+    /* height: 90%; */
+    width: 20%;
+    border-radius: 20%;
     border-color: transparent;
-    background-color: #A683E3;
+    background-color: #f67280;
     color: #fff;
-    font-size: 15px;
+    font-size: 13px;
     padding-bottom: 6px;
     border-width: 0;
 }
 
 .nav-link{
-    color: #333333;
+    color: #355c7d;
     text-decoration: none;
     font-size: 12px;
 
@@ -72,7 +73,7 @@ body{
 }
 
 h1 {
-  color: #fff;
+  color: #355c7d;
   padding: 10px;
 }
 
@@ -85,7 +86,7 @@ h1 {
 }
 
 #heading {
-  background-color: #A683E3;
+  background-color: #f67280;
   text-align: center;
 }
 
@@ -106,7 +107,7 @@ h1 {
 
 input:checked+p {
   text-decoration: line-through;
-  text-decoration-color: #A683E3;
+  text-decoration-color: #355c7d;
 }
 
 input[type="checkbox"] {
@@ -132,13 +133,13 @@ form.item {
 
 .item-btn {
     margin-right: 10px;
-    min-height: 50px;
-    width: 50px;
-    border-radius: 50%;
+    min-height: 5%;
+    width: 10%;
+    border-radius: 20%;
     border-color: transparent;
-    background-color: #A683E3;
+    background-color: #f67280;
     color: #fff;
-    font-size: 30px;
+    font-size: 25px;
     padding-bottom: 6px;
     border-width: 0;
 }
@@ -156,7 +157,7 @@ form.item {
 
 .item-input[type="text"]:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #A683E3;
+  box-shadow: inset 0 -3px 0 0 #355c7d;
 }
 
 ::placeholder {
@@ -166,14 +167,12 @@ form.item {
 
 footer p {
 
-    color: white;
-    color: rgba(0, 0, 0, 0.5);
     text-align: center;
     position: fixed;
     bottom: 10px;
     width: 100%;
 }
 .copyright{
-
+    color: #6c5b7b;
     bottom: 10px;
 }
