@@ -6,11 +6,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
-
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
-
 mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
 
 const itemSchema = {
@@ -20,44 +18,46 @@ const Item =  mongoose.model("Item", itemSchema);
 
 const item1 = new Item({name: "<-- remove Item"});
 const item2 = new Item( {name: "Add Item v"});
-
 const defaultItems = [item1, item2];
 
 const listSchema = {
     name: String,
     items: [itemSchema]
 }
-
 const List = mongoose.model("List", listSchema);
 
 
-
 app.get("/", function(req, res) {
-
     const listNames = [];
     List.find({}, function(err, foundLists){
-        if (foundLists.length){
-            for (let i = 0; i < foundLists.length; i++){
-                listNames.push(foundLists[i].name);
+        if (err){
+            console.log(err);
+        } else {
+            if (foundLists.length){
+                for (let i = 0; i < foundLists.length; i++){
+                    listNames.push(foundLists[i].name);
+                }
             }
         }
-    });
-    const items = []
-    Item.find({}, function(err, foundItems){
-
-        if (foundItems.length === 0){
-            Item.insertMany(defaultItems, function(err){
-                if (err){
-                    console.log(err);
-                } else{
-                    console.log("Successfully saved items to DB.");
+        completedTask(function(){
+            const items = []
+            Item.find({}, function(err, foundItems){
+                console.log("completed task: after / 48" + listNames);
+                if (foundItems.length === 0){
+                    Item.insertMany(defaultItems, function(err){
+                        if (err){
+                            console.log(err);
+                        } else{
+                            console.log("Successfully saved items to DB.");
+                        }
+                    });
+                    res.redirect("/");
+                } else {
+                    res.render("list", {listTitle: "Today", newListItems: foundItems, lists: listNames});
                 }
-            });
-            res.redirect("/");
-        } else {
-            res.render("list", {listTitle: "Today", newListItems: foundItems, lists: listNames});
-        }
 
+            });
+        });
     });
 });
 
@@ -101,53 +101,60 @@ app.post("/delete", function(req, res) {
     }
 });
 
-
+function completedTask(_callback){
+    _callback();
+}
 app.get("/:customListName", function(req,res){
     const customListName = _.capitalize(req.params.customListName);
-    // console.log("list: " + customListName);
     const listNames = [];
+
     List.find({}, function(err, foundLists){
-        if (foundLists.length){
-            for (let i = 0; i < foundLists.length; i++){
-                listNames.push(foundLists[i].name);
-            }
-            // console.log("names:" + listNames);
-        }
-    });
-
-
-
-    if (!(req.params.customListName === "favicon.ico")) {
-        List.findOne({name: customListName}, function(err, foundList){
-            if (!err){
-                if (!foundList){
-                    const list = new List({
-                    name: customListName,
-                    items: defaultItems
-                    });
-                    list.save(function(err, result){
-                        res.redirect("/" + customListName);
-                    });
-                } else {
-                    res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
+        if (err){
+            console.log(err);
+        } else {
+            if (foundLists.length){
+                for (let i = 0; i < foundLists.length; i++){
+                    listNames.push(foundLists[i].name);
                 }
             }
+        }
+        completedTask(function(){
+            if (!(req.params.customListName === "favicon.ico")) {
+                List.findOne({name: customListName}, function(err, foundList){
+                    console.log("completed task: after /custom 128 " + listNames);
+                    if (!err){
+                        if (!foundList){
+                            const list = new List({
+                            name: customListName,
+                            items: defaultItems
+                            });
+                            list.save(function(err, result){
+                                res.redirect("/" + customListName);
+                            });
+                        } else {
+                            res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
+                        }
+                    }
+                });
+            }
         });
-    }
+    });
+
 });
 
 
 app.post("/gotolist", function(req, res) {
-
-
     const listName = req.body.searchBar;
-    if (listName){
-        console.log("aaaaa");
+    if (listName === "Today"){
+        res.redirect("/");
+    } else{
+        res.redirect("/"+listName);
     }
-    res.redirect("/"+listName);
 
-    console.log("name: " + listName);
+
+    console.log("name of list being created INPAGE: " + listName);
 });
+
 
 app.listen(3000, function() {
     console.log("server running on port 3000");
