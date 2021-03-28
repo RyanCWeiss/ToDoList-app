@@ -100,9 +100,12 @@ app.post("/delete", function(req, res) {
     }
 });
 
+
 function completedTask(_callback){
     _callback();
 }
+
+
 app.get("/:customListName", function(req,res){
     const customListName = _.capitalize(req.params.customListName);
     const listNames = [];
