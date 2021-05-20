@@ -9,7 +9,7 @@ const _ = require("lodash");
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true},{ useUnifiedTopology: true}, { useFindAndModify: false});
 
 const itemSchema = {
     name: String
@@ -19,6 +19,7 @@ const Item =  mongoose.model("Item", itemSchema);
 const item1 = new Item({name: "<-- remove Item"});
 const item2 = new Item( {name: "Add Item v"});
 const defaultItems = [item1, item2];
+const defaultItems2 = [];
 
 const listSchema = {
     name: String,
@@ -93,6 +94,7 @@ app.post("/delete", function(req, res) {
         });
     } else {
         List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: checkedItemId}}}, function(err,foundList){
+            console.log("delete: " + foundList.items);
             if (!err){
                 res.redirect("/" + listName);
             }
@@ -121,6 +123,7 @@ app.get("/:customListName", function(req,res){
             }
         }
         completedTask(function(){
+            const items = [];
             if (!(req.params.customListName === "favicon.ico")) {
                 List.findOne({name: customListName}, function(err, foundList){
                     if (!err){
@@ -133,6 +136,7 @@ app.get("/:customListName", function(req,res){
                                 res.redirect("/" + customListName);
                             });
                         } else {
+                            console.log("get custom: " + foundList.items.length);
                             res.render("list", {listTitle: foundList.name, newListItems: foundList.items, lists: listNames});
                         }
                     }
